@@ -13,9 +13,11 @@ from astm_bidirectional_common import my_hub
 #see astm_var.py_example
 sys.path.append('/var/')
 import astm_var
-  
-#Main Code###############################
 
+#Main Code###############################
+def print_to_log(object1,object2):
+  logging.debug('{} {}'.format(object1,object2))
+  
 if __name__=='__main__':
   logging.basicConfig(filename=conf.file2mssql_log_filename,level=logging.DEBUG,format='%(asctime)s : %(message)s')  
   h=my_hub(astm_var.CONNECTION_STRING)
@@ -27,6 +29,10 @@ if __name__=='__main__':
       m.analyse_file()
       m.mk_tuple()
       work_done=False
+      #if final data is empty, sample_id is not found, move file
+      if(len(m.final_data)==0):
+        work_done=True
+        print_to_log('final data empty:','sample_id not available??')     
       for each_sample in m.final_data:
         o_order_id=each_sample[0]      
         h_equipment_id=each_sample[1]
