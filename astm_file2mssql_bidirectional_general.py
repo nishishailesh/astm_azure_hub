@@ -5,6 +5,7 @@ import sys
 #dpkg-reconfigure tdsodbc
 #may need to give absolute paths in /etc/odbcinst.ini
 #Absolute path can be found by dpkg -L <.deb>
+import pyodbc
 import time
 import logging
 
@@ -244,7 +245,7 @@ class astm_file(file_mgmt):
     #Manage last patient on getting termination record
     if len(str(self.sample_id))>0:    #if previous patient exist
       self.final_data=self.final_data + ((self.sample_id,self.analyser_id,self.result),)
-  
+        
     patient_tuple=self.on_any_line(patient_line)
     
     #initialize
@@ -303,6 +304,11 @@ class astm_file(file_mgmt):
       self.sample_id=order_tuple[2]
       pstr='New Sample Id:({sid})'.format(sid=self.sample_id)
       logging.debug(pstr)
+      if(len(self.sample_id)==0):
+        self.sample_id=0     
+        pstr='Sample ID was empty. so setting New Sample Id:({sid})'.format(sid=self.sample_id)
+        logging.debug(pstr)
+      
     except Exception as my_ex:
       pstr='Look at O record <<<{}>>> Is it inappropriate? no order_tuple[2] found'.format(order_tuple)
       logging.debug(pstr)

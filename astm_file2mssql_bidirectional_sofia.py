@@ -39,6 +39,7 @@ if __name__=='__main__':
         astm_msg=json.dumps(each_sample[2])
         for_send="{{'o_order_id':'{}','h_equipment_id':'{}','astm':'{}'}}".format(each_sample[0],each_sample[1],astm_msg)
         if(h.send_to_hub(for_send)):
+          print_to_log('for_send=',for_send) 
           work_done=True
       if(work_done):
         m.archive_inbox_file() 
